@@ -15,11 +15,11 @@ type TaskRepositoryInterface interface {
 }
 
 type Task struct {
-	ID        string
-	Title     string
-	Body      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        string    `json:"id"`
+	Title     string    `json:"title"`
+	Body      string    `json:"body"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type TaskRepository struct {

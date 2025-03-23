@@ -18,21 +18,52 @@ func NewTaskHandler(tr repositories.TaskRepositoryInterface) *TaskHandler {
 }
 
 func (h *TaskHandler) GetTasks(c echo.Context) error {
-	return c.String(http.StatusOK, "Get Tasks placeholder")
+	tasks := h.taskRepository.GetAllTasks()
+	return c.JSON(http.StatusOK, tasks)
 }
 
 func (h *TaskHandler) CreateTask(c echo.Context) error {
-	return c.String(http.StatusCreated, "Create Task placeholder")
+	task := new(repositories.Task)
+	if err := c.Bind(task); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid input"})
+	}
+
+	if err := h.taskRepository.CreateTask(task); err != nil {
+		return c.JSON(http.StatusConflict, map[string]string{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusCreated, task)
 }
 
 func (h *TaskHandler) GetTask(c echo.Context) error {
-	return c.String(http.StatusOK, "Get Task placeholder")
+	id := c.Param("id")
+	task, err := h.taskRepository.GetTask(id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, task)
 }
 
 func (h *TaskHandler) UpdateTask(c echo.Context) error {
-	return c.String(http.StatusOK, "Update Task placeholder")
+	id := c.Param("id")
+	updatedTask := new(repositories.Task)
+	if err := c.Bind(updatedTask); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid input"})
+	}
+
+	if err := h.taskRepository.UpdateTask(id, updatedTask); err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, updatedTask)
 }
 
 func (h *TaskHandler) DeleteTask(c echo.Context) error {
-	return c.String(http.StatusOK, "Delete Task placeholder")
+	id := c.Param("id")
+	if err := h.taskRepository.DeleteTask(id); err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": err.Error()})
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }
