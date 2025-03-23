@@ -7,6 +7,7 @@ import (
 	"github.com/zrayyes/task-manager/internal/repositories"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 // Service struct for dependency injection
@@ -33,6 +34,8 @@ func (s *Service) HelloWorld(c echo.Context) error {
 
 func main() {
 	e := echo.New()
+
+	e.Use(middleware.CORS())
 
 	// Initialize a new Service
 	service := NewService()
