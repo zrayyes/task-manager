@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"sync"
 	"time"
 )
@@ -18,6 +19,7 @@ type Task struct {
 	ID        string    `json:"id"`
 	Title     string    `json:"title"`
 	Body      string    `json:"body"`
+	Completed bool      `json:"completed"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -40,10 +42,8 @@ func (r *TaskRepository) CreateTask(task *Task) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.tasks[task.ID]; exists {
-		return ErrAlreadyExists
-	}
-
+	task.ID = fmt.Sprintf("%d", len(r.tasks)+1)
+	task.Completed = false
 	task.CreatedAt = time.Now()
 	task.UpdatedAt = task.CreatedAt
 	r.tasks[task.ID] = task
