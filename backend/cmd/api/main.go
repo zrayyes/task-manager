@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/zrayyes/task-manager/internal/repositories"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -16,11 +18,11 @@ type Service struct {
 
 // NewService initializes a new Service
 func NewService() *Service {
-
+	tr := repositories.NewTaskRepository()
 	return &Service{
 		infoLog:     log.New(log.Writer(), "INFO: ", log.Ldate|log.Ltime|log.Lshortfile),
 		errorLog:    log.New(log.Writer(), "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile),
-		taskHandler: NewTaskHandler(),
+		taskHandler: NewTaskHandler(tr),
 	}
 }
 

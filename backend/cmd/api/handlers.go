@@ -4,14 +4,17 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/zrayyes/task-manager/internal/repositories"
 )
 
 type TaskHandler struct {
-	// Future dependencies like services or repositories can be added here
+	taskRepository repositories.TaskRepositoryInterface
 }
 
-func NewTaskHandler() *TaskHandler {
-	return &TaskHandler{}
+func NewTaskHandler(tr repositories.TaskRepositoryInterface) *TaskHandler {
+	return &TaskHandler{
+		taskRepository: tr,
+	}
 }
 
 func (h *TaskHandler) GetTasks(c echo.Context) error {
