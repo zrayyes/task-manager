@@ -57,8 +57,9 @@ func main() {
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 		LogStatus: true,
 		LogURI:    true,
+		LogMethod: true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-			service.infoLog.Printf("REQUEST: uri: %v, status: %v\n", v.URI, v.Status)
+			service.infoLog.Printf("REQUEST: %s %s %d", v.Method, v.URI, v.Status)
 			return nil
 		},
 	}))
